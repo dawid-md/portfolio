@@ -11,11 +11,32 @@ type Star = {
     animationDuration: number
 }
 
+type Meteor = {
+    id: number,
+    size: number,
+    x: number,
+    y: number,
+    delay: number,
+    animationDuration: number
+}
+
 export const StarBackground = () => {
     const [stars, setStars] = useState<Star[]>([])
+    const [meteors, setMeteors] = useState<Meteor[]>([])
 
     useEffect(() => {
         generateStars()
+        generateMeteors()
+
+        const handleResize = () => {
+            generateStars()
+        }
+
+        window.addEventListener('resize', handleResize)
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+
     }, [])
     
     const generateStars = () => {
@@ -25,15 +46,31 @@ export const StarBackground = () => {
         for(let i = 0; i < numberOfStars; i++) {
             newStars.push({
                 id: i,
-                size: Math.random() * 3 + 1,
+                size: Math.random() * 1 ,
                 x: Math.random() * 100,
                 y: Math.random() * 100,
-                opacity: Math.random() * 0.5 + 0.5,
+                opacity: Math.random() * 0.5 + 0.7,
                 animationDuration: Math.random() * 4 + 2
             })
         }
         setStars(newStars)
 
+    }
+
+    const generateMeteors = () => {
+        const numberOfMeteors = 2
+        const newMeteors = []
+        for(let i = 0; i < numberOfMeteors; i++) {
+            newMeteors.push({
+                id: i,
+                size: Math.random() * 1 + 1,
+                x: Math.random() * 100,
+                y: Math.random() * 100,
+                delay: Math.random() * -20,
+                animationDuration: Math.random() * 30 + 10
+            })
+        }
+        setMeteors(newMeteors)
     }
 
     return (
@@ -46,6 +83,16 @@ export const StarBackground = () => {
                 top: star.y + "%",
                 opacity: star.opacity,
                 animationDuration: star.animationDuration + "s"
+            }} />
+        ))}
+        {meteors.map((meteor) => (
+            <div key={meteor.id} className="meteor animate-meteor" style={{
+                width: meteor.size *15 + "px",
+                height: meteor.size * 1 + "px",
+                left: meteor.x + "%",
+                top: meteor.y + "%",
+                animationDelay: meteor.delay + "s",
+                animationDuration: meteor.animationDuration + "s"
             }} />
         ))}
         </div>

@@ -9,9 +9,7 @@ function App() {
           <Route index element={<Home />}/>
           <Route path="*" element={<NotFound />}/>
         </Routes>
-      
     </BrowserRouter>
   )
 }
-
 export default App
